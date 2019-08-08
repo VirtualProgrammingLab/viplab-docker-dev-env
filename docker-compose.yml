@@ -1,0 +1,7 @@
+version: '3'
+
+services:
+  ecs:
+    build: ./ecs
+    ports:
+      - 8080:80
