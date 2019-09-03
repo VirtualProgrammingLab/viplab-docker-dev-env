@@ -5,3 +5,12 @@ services:
     build: ./ecs
     ports:
       - 8080:80
+#  backend:
+#    build: 
+#      context: ./backend
+#      args:
+#        GITHUB_TOKEN:
+  ilias:
+    build: ./ilias
+    ports:
+      - 80:80
