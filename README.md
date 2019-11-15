@@ -10,3 +10,10 @@ GITHUB_TOKEN=<token>
 ```
 
 After adding the token, run `docker-compose build`
+
+## Login
+
+### Ilias
+Login: root
+
+Password: password
