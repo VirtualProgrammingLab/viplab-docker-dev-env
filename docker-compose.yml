@@ -15,4 +15,4 @@ services:
   ilias:
     build: ./ilias
     ports:
-      - 80
+      - 8082:80
