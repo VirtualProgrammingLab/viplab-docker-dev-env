@@ -16,13 +16,13 @@ RUN bundle install
 
 COPY --from=ecs /ecs ./
 COPY --from=ecs /vip_template/ecs_vip.rb ./ecs_vip.rb
+COPY ./vip_init.rb ./vip_init.rb
 
 ENV RACK_ENV=development
-ENV ECS_PORT=80
+ENV ECS_PORT=3000
 
 EXPOSE ${ECS_PORT}
 
 COPY entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
-    
