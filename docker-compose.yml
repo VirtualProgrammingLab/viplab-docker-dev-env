@@ -16,3 +16,8 @@ services:
     build: ./ilias
     ports:
       - 8082:80
+  websocket-api:
+    image: websocket-api
+    ports: 
+      - 8083:9080
+    env_file: websocket-api/websocket-api-config.env
