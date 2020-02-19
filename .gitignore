@@ -1,1 +1,3 @@
 .env
+jwks.json
+private.jwks.json

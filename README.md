@@ -1,13 +1,11 @@
 
 
 ## Build
-
-To build all Docker images access to the private TIK GitHub repositories is required.
-Therefore a GitHub access token with `repo` scope is required.
-So [generate a new token](https://github.tik.uni-stuttgart.de/settings/tokens) and create the `.env` file and add the token like a environment variable.
+First create the JSON Web Keys for the JWT singing and verification.
 ```
-GITHUB_TOKEN=<token>
+docker run --rm legion2/json-web-key-generator jwk-generator -t RSA -s 2048 -S -p -i iliaskey
 ```
+Copy the two json objects into a private and public key file named `jwks.json` and `private.jwks.json`.
 
 After adding the token, run `docker-compose build`
 
