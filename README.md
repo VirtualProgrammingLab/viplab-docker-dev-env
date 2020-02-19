@@ -9,6 +9,17 @@ Copy the two json objects into a private and public key file named `jwks.json` a
 
 After adding the token, run `docker-compose build`
 
+## Start all applications
+To Start the applications:
+```
+docker-compose up -d
+```
+
+To view all logs:
+```
+docker-compose logs -f
+```
+
 ## Login
 
 ### Ilias
