@@ -8,7 +8,7 @@ services:
     ports:
       - 8080:8080
 #  backend:
-#    build: 
+#    build:
 #      context: ./backend
 #      args:
 #        GITHUB_TOKEN:
@@ -18,8 +18,15 @@ services:
       - 8082:80
   websocket-api:
     image: websocket-api
-    ports: 
+    ports:
       - 8083:9080
     env_file: websocket-api/websocket-api-config.env
-    volumes: 
+    volumes:
       - ./jwks.json:/config/jwks.json:ro
+  rabbitmq:
+    image: rabbitmq:3.8.3-management
+    ports:
+      - 8084:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
