@@ -5,7 +5,7 @@ RUN set -eux; \
     git clone https://github.com/TIK-NFL/ViPLabCron.git /viplab-cron; \
     git clone https://github.com/TIK-NFL/ViPLabEvent.git /viplab-event
 
-FROM legion2/ilias-test-docker
+FROM legion2/ilias-test-docker:release_5-3
 
 COPY --from=plugins /viplab /var/www/html/ilias/Customizing/global/plugins/Modules/TestQuestionPool/Questions/assViPLab
 COPY --from=plugins /viplab-cron /var/www/html/ilias/Customizing/global/plugins/Services/Cron/CronHook/ViPLabCron
