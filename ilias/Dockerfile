@@ -1,11 +1,11 @@
 FROM alpine/git as plugins
 
 RUN set -eux; \
-    git clone https://github.com/TIK-NFL/ViPLab.git /viplab; \
-    git clone https://github.com/TIK-NFL/ViPLabCron.git /viplab-cron; \
-    git clone https://github.com/TIK-NFL/ViPLabEvent.git /viplab-event
+    git clone -b release_5_4 https://github.com/TIK-NFL/ViPLab.git /viplab; \
+    git clone -b release_5_4 https://github.com/TIK-NFL/ViPLabCron.git /viplab-cron; \
+    git clone -b release_5_4 https://github.com/TIK-NFL/ViPLabEvent.git /viplab-event
 
-FROM legion2/ilias-test-docker:release_5-3
+FROM legion2/ilias-test-docker:release_5-4
 
 COPY --from=plugins /viplab /var/www/html/ilias/Customizing/global/plugins/Modules/TestQuestionPool/Questions/assViPLab
 COPY --from=plugins /viplab-cron /var/www/html/ilias/Customizing/global/plugins/Services/Cron/CronHook/ViPLabCron
