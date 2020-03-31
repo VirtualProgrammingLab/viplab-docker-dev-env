@@ -1,17 +1,12 @@
-version: '3'
+version: "3"
 
 services:
-  ecs:
-    build: ./ecs
-  nginx:
-    build: ./nginx
-    ports:
-      - 8080:8080
-#  backend:
-#    build:
-#      context: ./backend
-#      args:
-#        GITHUB_TOKEN:
+  #  ecs:
+  #    build: ./ecs
+  #  nginx:
+  #    build: ./nginx
+  #    ports:
+  #      - 8080:8080
   ilias:
     build: ./ilias
     ports:
