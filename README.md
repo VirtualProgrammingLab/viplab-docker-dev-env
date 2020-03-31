@@ -7,7 +7,8 @@ docker run --rm legion2/json-web-key-generator jwk-generator -t RSA -s 2048 -S -
 ```
 Copy the two json objects into a private and public key file named `jwks.json` and `jwks.private.json`.
 
-After adding the token, run `docker-compose build`
+After creating the keys, run `docker-compose build`.
+Every config change require a rebuild of the docker images.
 
 ## Start all applications
 To Start the applications:
@@ -20,9 +21,20 @@ To view all logs:
 docker-compose logs -f
 ```
 
-## Login
+## Services
 
 ### Ilias
-Login: root
 
-Password: password
+* url: http://localhost:8082
+* Login: root
+* Password: password
+
+### websocket-api
+
+* url: http://localhost:8083
+
+### activemq
+
+* url: http://localhost:8084/console/login
+* Username: user
+* Password: password
