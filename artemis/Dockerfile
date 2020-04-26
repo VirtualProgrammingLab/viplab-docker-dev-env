@@ -18,7 +18,7 @@
 # ActiveMQ Artemis
 
 FROM openjdk:8 as builder
-LABEL maintainer="Apache ActiveMQ Team"
+LABEL maintainer="Per Pascal Seeland <pascal.seeland@tik.uni-stuttgart.de"
 # Make sure pipes are considered to determine success, see: https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 WORKDIR /opt
@@ -80,17 +80,8 @@ COPY --from=builder "/var/lib/artemis" "/var/lib/artemis"
 EXPOSE 8161 \
 # JMX Exporter
     9404 \
-# Port for CORE,MQTT,AMQP,HORNETQ,STOMP,OPENWIRE
-#   61616 \
-# Port for HORNETQ,STOMP
-#   5445 \
 # Port for AMQP
     5672
-# Port for MQTT
-#   1883 \
-#Port for STOMP
-#   61613
-
 
 WORKDIR /var/lib/artemis
 
