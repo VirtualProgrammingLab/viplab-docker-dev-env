@@ -30,3 +30,10 @@ services:
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
+  standalone-frontend:
+    image: viplab/standalone-frontend:latest
+    ports:
+      - 8085:5000
+    volumes:
+      - ./jwks.private.json:/jwks.private.json:ro
+      - ./examples:/input:ro
