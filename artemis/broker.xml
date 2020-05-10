@@ -223,9 +223,14 @@ under the License.
                <queue name="computations-c-queue" />
             </anycast>
          </address>
-         <address name="computations/docker">
+         <address name="computations/container">
             <anycast>
-               <queue name="computations-docker-queue" />
+               <queue name="computations-container-queue" />
+            </anycast>
+         </address>
+         <address name="results">
+            <anycast>
+               <queue name="results-queue" />
             </anycast>
          </address>
       </addresses>

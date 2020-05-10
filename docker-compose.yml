@@ -27,6 +27,7 @@ services:
         ACTIVEMQ_ARTEMIS_VERSION: "2.11.0"
     ports:
       - 8084:8161
+      - 5672:5672
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
