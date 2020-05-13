@@ -19,6 +19,8 @@ services:
       JWKS_FILE: /config/jwks.json
     volumes:
       - ./jwks.json:/config/jwks.json:ro
+    depends_on:
+      - activemq
   activemq:
     image: viplab-artemis:2.11.0
     build: 
