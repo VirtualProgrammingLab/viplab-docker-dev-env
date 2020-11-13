@@ -38,3 +38,7 @@ docker-compose logs -f
 * url: http://localhost:8084/console/login
 * Username: user
 * Password: password
+
+### Standalone frontend
+
+* url: http://localhost:8085
