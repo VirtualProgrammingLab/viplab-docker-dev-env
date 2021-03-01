@@ -40,3 +40,8 @@ services:
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
+  dummy-backend:
+    image: viplab/dummy-backend:latest
+    environment:
+      - amqp-host=activemq
+      - viplab.responses=
