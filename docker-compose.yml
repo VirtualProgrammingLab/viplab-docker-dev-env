@@ -12,11 +12,12 @@ services:
 #    ports:
 #      - 8082:80
   websocket-api:
-    build: ./websocket-api
+    image: viplab/websocket-api:latest
     ports:
       - 8083:8080
     environment:
-      JWKS_FILE: /config/jwks.json
+      - JWKS_FILE=/config/jwks.json
+      - amqp-host=activemq
     volumes:
       - ./jwks.json:/config/jwks.json:ro
     depends_on:
