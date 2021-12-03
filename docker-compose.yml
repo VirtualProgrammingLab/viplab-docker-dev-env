@@ -41,6 +41,10 @@ services:
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
+  backend:
+    image: viplab/backend:latest
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   dummy-backend:
     image: viplab/dummy-backend:latest
     environment:
