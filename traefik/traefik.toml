@@ -1,0 +1,31 @@
+debug = true
+
+logLevel = "WARNING"
+defaultEntryPoints = ["websecure", "web"]
+
+[entryPoints]
+  [entryPoints.web]
+  address = ":80"
+    [entryPoints.web.http]
+      [entryPoints.web.http.redirections]
+        [entryPoints.web.http.redirections.entryPoint]
+          to = "websecure"
+          scheme = "https"    
+  [entryPoints.websecure]
+  address = ":443"
+  [entryPoints.traefik]
+  address = ":8080"
+
+# Activate docker API
+[providers]
+  [providers.file]
+    filename = "/etc/traefik/tls.yaml"
+  [providers.docker]
+    endpoint = "unix:///var/run/docker.sock"
+    watch = true
+    exposedbydefault = false
+
+# Activate Traefik dashboard
+[api]
+  dashboard = true
+  insecure = true

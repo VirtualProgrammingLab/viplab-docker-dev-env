@@ -1,20 +1,23 @@
 version: "3.9"
 
 services:
-  #  ecs:
-  #    build: ./ecs
-  #  nginx:
-  #    build: ./nginx
-  #    ports:
-  #      - 8080:8080
 #  ilias:
 #    build: ./ilias
 #    ports:
 #      - 8082:80
+  traefik:
+    restart: on-failure
+    image: traefik:2.5.3
+    ports: # if your system has already apache running on 80/443 choose different ports and adjust traefik.toml
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - ./traefik:/etc/traefik
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./certs:/etc/certs # copy certs of your host to ./certs before!
   websocket-api:
     image: viplab/websocket-api:latest
-    ports:
-      - 8083:8080
     environment:
       - JWKS_FILE=/config/jwks.json
       - amqp-host=activemq
@@ -22,25 +25,45 @@ services:
       - ./jwks.json:/config/jwks.json:ro
     depends_on:
       - activemq
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.websocket-api.entrypoints=websecure"
+      - "traefik.http.routers.websocket-api.tls=true"
+      - "traefik.http.routers.websocket-api.rule=Host(`${HOST}`) && Path(`/computations`)"
   activemq:
     image: viplab-artemis:2.11.0
     build: 
       context: ./artemis
       args:
         ACTIVEMQ_ARTEMIS_VERSION: "2.11.0"
-    ports:
-      - 8084:8161
-      - 5672:5672
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
   standalone-frontend:
     image: viplab/standalone-frontend:latest
-    ports:
-      - 8085:5000
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
+    environment:
+      - WSAPI=wss://localhost/computations
+    profiles: ["standalone"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
+      - "traefik.http.routers.standalone-frontend.tls=true"
+      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST}`)"
+  darus-connector:
+    image: viplab/dv-viplab-connector:latest
+    volumes:
+      - ./jwks.private.json:/app/jwks.private.json:ro
+    environment:
+      - WSAPI=wss://localhost/computations
+    profiles: ["darus"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.darus-connector.entrypoints=websecure"
+      - "traefik.http.routers.darus-connector.tls=true"
+      - "traefik.http.routers.darus-connector.rule=Host(`${HOST}`)"
   backend:
     image: viplab/backend:latest
     volumes:
