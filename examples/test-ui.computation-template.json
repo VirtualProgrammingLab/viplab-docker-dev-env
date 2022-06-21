@@ -1,0 +1,28 @@
+{
+  "identifier": "cd39715e-55de-4563-bf8c-929d3d699953",
+  "environment": "Container",
+  "files":   [
+    { "identifier": "5c8d988c-8a13-465f-b29c-545621dd66cc",
+      "path": "params.ini",
+      "metadata" :
+        { "syntaxHighlighting": "ini"
+        },
+      "parts": [
+        {
+          "identifier": "5c8d988c-8a13-465f-b29c-545621dd66bb",
+          "access"    : "modifiable",
+            "metadata"  :
+              { "name"      : "params.input file"
+              },
+            "content"   : ""
+          }
+        ] 
+    }
+  ],
+  "configuration" :
+    { "resources.image"  : "name://viplab-example-image", 
+      "resources.volume" : "/data/shared",
+      "resources.memory" : "1g",
+      "resources.numCPUs" : 1
+    }
+}

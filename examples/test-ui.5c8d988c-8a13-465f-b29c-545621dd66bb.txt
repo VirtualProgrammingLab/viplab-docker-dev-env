@@ -1,0 +1,14 @@
+[coffee preference]
+coffeeTemperature=75
+ 
+[about you]
+likedThings=programming,music,books
+favoritePL=Java
+fridge=never
+dancing=Last Christmas
+dislikedThings=Spiders
+randomNumbers=25,50,75
+name=Kathryn
+christmasWish=COFFEE! In that nebula!
+age=36
+codeSnippet=aW50IG1haW4oaW50IGFyZ2MsIGNoYXIgKiphcmd2KSB7IC8vIFByaW50ICdIZWxsbyBXb3JsZCcgfQ==

@@ -31,11 +31,7 @@ services:
       - "traefik.http.routers.websocket-api.tls=true"
       - "traefik.http.routers.websocket-api.rule=Host(`${HOST}`) && Path(`/computations`)"
   activemq:
-    image: viplab-artemis:2.11.0
-    build: 
-      context: ./artemis
-      args:
-        ACTIVEMQ_ARTEMIS_VERSION: "2.11.0"
+    image: viplab/activemq-artemis:2.23.0-r0
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
@@ -66,6 +62,10 @@ services:
       - "traefik.http.routers.darus-connector.rule=Host(`${HOST}`)"
   backend:
     image: viplab/backend:latest
+    environment:
+      - AMQPServer=activemq
+    depends_on:
+      - activemq
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   dummy-backend:
