@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.websocket-api.tls=true"
       - "traefik.http.routers.websocket-api.rule=Host(`${HOST}`) && Path(`/computations`)"
   activemq:
-    image: viplab/activemq-artemis:2.23.0-r0
+    image: viplab/artemis:2.23.0-r0
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
