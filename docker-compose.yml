@@ -7,7 +7,7 @@ services:
 #      - 8082:80
   traefik:
     restart: on-failure
-    image: traefik:2.5.3
+    image: traefik:2.5.7
     ports: # if your system has already apache running on 80/443 choose different ports and adjust traefik.toml
       - "80:80"
       - "443:443"
@@ -64,10 +64,23 @@ services:
     image: viplab/backend:latest
     environment:
       - AMQPServer=activemq
+      - endpoint_url
+      - access_key
+      - secret_key
+      - rewrite_endpoint_url
     depends_on:
       - activemq
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+  s3:
+    image: scireum/s3-ninja:latest
+    profiles: ["s3"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.s3.entrypoints=websecure"
+      - "traefik.http.routers.s3.tls=true"
+      - "traefik.http.routers.s3.rule=Host(`${HOST}`) && (PathPrefix(`/test-bucket`) || PathPrefix(`/ui`)  || PathPrefix(`/assets`))"
+
   dummy-backend:
     image: viplab/dummy-backend:latest
     environment:
