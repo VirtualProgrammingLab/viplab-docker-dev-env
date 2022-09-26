@@ -73,7 +73,7 @@
                             "metadata": {
                                 "guiType": "dropdown",
                                 "name": "Discretization Method",
-                                "description": "Choose Discretization Method. You can choose between ???three or four??? different finite volume methods implemented in DuMux."
+                                "description": "Choose Discretization Method. You can choose between three different finite volume methods implemented in DuMux."
                             },
                             "options": [
                                 {
