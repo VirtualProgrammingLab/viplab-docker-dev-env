@@ -51,9 +51,12 @@ services:
   darus-connector:
     image: viplab/dv-viplab-connector:latest
     volumes:
-      - ./jwks.private.json:/app/jwks.private.json:ro
+      - ./jwks.private.json:/jwks.private.json:ro
     environment:
       - WSAPI=wss://localhost/computations
+      - FLASK_SECRET
+      - LOGIN_MOD_JWT_KEY
+      - LOGIN_MOD_URL=https://demodarus.izus.uni-stuttgart.de/__dataverse_tools__/viplab_login/login
     profiles: ["darus"]
     labels:
       - "traefik.enable=true"
