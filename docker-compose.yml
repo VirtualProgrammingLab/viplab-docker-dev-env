@@ -6,7 +6,7 @@ services:
 #    ports:
 #      - 8082:80
   traefik:
-    restart: on-failure
+    restart: unless-stopped
     image: traefik:2.5.7
     ports: # if your system has already apache running on 80/443 choose different ports and adjust traefik.toml
       - "80:80"
@@ -15,8 +15,9 @@ services:
     volumes:
       - ./traefik:/etc/traefik
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./certs:/etc/certs # copy certs of your host to ./certs before!
+      - ${CERTS_PATH}:/etc/certs # copy certs of your host to ./certs before!
   websocket-api:
+    restart: unless-stopped
     image: viplab/websocket-api:latest
     environment:
       - JWKS_FILE=/config/jwks.json
@@ -29,41 +30,55 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.websocket-api.entrypoints=websecure"
       - "traefik.http.routers.websocket-api.tls=true"
-      - "traefik.http.routers.websocket-api.rule=Host(`${HOST}`) && Path(`/computations`)"
+      - "traefik.http.routers.websocket-api.rule=Host(`${HOST_URL}`) && Path(`/computations`)"
   activemq:
+    restart: unless-stopped
     image: viplab/artemis:2.23.0-r0
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
   standalone-frontend:
+    restart: unless-stopped
     image: viplab/standalone-frontend:latest
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
     environment:
-      - WSAPI=wss://localhost/computations
+      - WSAPI=wss://${HOST_URL}/computations
     profiles: ["standalone"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
       - "traefik.http.routers.standalone-frontend.tls=true"
-      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
   darus-connector:
+    restart: unless-stopped
     image: viplab/dv-viplab-connector:latest
+    depends_on:
+      - redis
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - WSAPI=wss://localhost/computations
+      - WSAPI=wss://${HOST_URL}/computations
       - FLASK_SECRET
       - LOGIN_MOD_JWT_KEY
-      - LOGIN_MOD_URL=https://demodarus.izus.uni-stuttgart.de/__dataverse_tools__/viplab_login/login
+      - LOGIN_MOD_URL
+      - REDIS_HOST_PORT=redis:6379
+      - DATAVERSE_URL
     profiles: ["darus"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.darus-connector.entrypoints=websecure"
       - "traefik.http.routers.darus-connector.tls=true"
-      - "traefik.http.routers.darus-connector.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.darus-connector.rule=Host(`${HOST_URL}`)"
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    profiles: ["darus"]
+
   backend:
+    restart: unless-stopped
     image: viplab/backend:latest
     environment:
       - AMQPServer=activemq
@@ -71,20 +86,23 @@ services:
       - access_key
       - secret_key
       - rewrite_endpoint_url
+      - bucket_name
     depends_on:
       - activemq
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   s3:
+    restart: unless-stopped
     image: scireum/s3-ninja:latest
     profiles: ["s3"]
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.s3.entrypoints=websecure"
       - "traefik.http.routers.s3.tls=true"
-      - "traefik.http.routers.s3.rule=Host(`${HOST}`) && (PathPrefix(`/test-bucket`) || PathPrefix(`/ui`)  || PathPrefix(`/assets`))"
+      - "traefik.http.routers.s3.rule=Host(`${HOST_URL}`) && (PathPrefix(`/test-bucket`) || PathPrefix(`/ui`)  || PathPrefix(`/assets`))"
 
   dummy-backend:
+    restart: unless-stopped
     image: viplab/dummy-backend:latest
     environment:
       - amqp-host=activemq
