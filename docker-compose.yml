@@ -51,6 +51,21 @@ services:
       - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
       - "traefik.http.routers.standalone-frontend.tls=true"
       - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
+  standalone-frontend-mount:
+    restart: unless-stopped
+    image: viplab/standalone-frontend:latest
+    volumes:
+      - ./jwks.private.json:/jwks.private.json:ro
+      - ${FRONTEND_DIR}/src:/app
+      - ./examples:/input:ro
+    environment:
+      - WSAPI=wss://${HOST_URL}/computations
+    profiles: ["standalone-mount"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
+      - "traefik.http.routers.standalone-frontend.tls=true"
+      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
   darus-connector:
     restart: unless-stopped
     image: viplab/dv-viplab-connector:latest
