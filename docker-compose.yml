@@ -66,6 +66,21 @@ services:
       - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
       - "traefik.http.routers.standalone-frontend.tls=true"
       - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
+  vue-frontend-mount:
+    restart: unless-stopped
+    image: viplab/npm:16.14.2-alpine
+    command: ["run", "serve", "--", "--host", "0.0.0.0"]
+    volumes:
+      - ./jwks.private.json:/app/src/assets/jwks.private.json:ro
+      - ${VUE_DIR}:/app
+    environment:
+      - WSAPI=wss://${HOST_URL}/computations
+    profiles: ["vue-mount"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
+      - "traefik.http.routers.standalone-frontend.tls=true"
+      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
   darus-connector:
     restart: unless-stopped
     image: viplab/dv-viplab-connector:latest
