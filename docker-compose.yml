@@ -68,7 +68,7 @@ services:
       - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
   vue-frontend-mount:
     restart: unless-stopped
-    image: viplab/npm:16.14.2-alpine
+    image: viplab/npm:18.13.0-alpine
     command: ["run", "serve", "--", "--host", "0.0.0.0"]
     volumes:
       - ./jwks.private.json:/app/src/assets/jwks.private.json:ro
@@ -78,9 +78,23 @@ services:
     profiles: ["vue-mount"]
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.standalone-frontend.entrypoints=websecure"
-      - "traefik.http.routers.standalone-frontend.tls=true"
-      - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
+      - "traefik.http.routers.vue-frontend.entrypoints=websecure"
+      - "traefik.http.routers.vue-frontend.tls=true"
+      - "traefik.http.routers.vue-frontend.rule=Host(`${HOST_URL}`)"
+  standalone-frontend-sign:
+    restart: unless-stopped
+    image: viplab/standalone-frontend:latest
+    volumes:
+      - ./jwks.private.json:/jwks.private.json:ro
+      - ./examples:/input:ro
+    environment:
+      - WSAPI=wss://${HOST_URL}/computations
+    profiles: ["vue-mount"]
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vue-frontend-sign.entrypoints=websecure"
+      - "traefik.http.routers.vue-frontend-sign.tls=true"
+      - "traefik.http.routers.vue-frontend-sign.rule=Host(`${HOST_URL}`) && Path(`/sign`)"
   darus-connector:
     restart: unless-stopped
     image: viplab/dv-viplab-connector:latest
@@ -106,7 +120,6 @@ services:
     image: redis:alpine
     restart: unless-stopped
     profiles: ["darus"]
-
   backend:
     restart: unless-stopped
     image: viplab/backend:latest
