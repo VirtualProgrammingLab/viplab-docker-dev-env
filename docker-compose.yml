@@ -1,13 +1,11 @@
 version: "3.9"
 
 services:
-#  ilias:
-#    build: ./ilias
-#    ports:
-#      - 8082:80
   traefik:
     restart: unless-stopped
     image: traefik:2.5.7
+    networks:
+      - viplab
     ports: # if your system has already apache running on 80/443 choose different ports and adjust traefik.toml
       - "80:80"
       - "443:443"
@@ -19,6 +17,8 @@ services:
   websocket-api:
     restart: unless-stopped
     image: viplab/websocket-api:latest
+    networks:
+      - viplab
     environment:
       - JWKS_FILE=/config/jwks.json
       - amqp-host=activemq
@@ -34,12 +34,16 @@ services:
   activemq:
     restart: unless-stopped
     image: viplab/artemis:2.23.0-r0
+    networks:
+      - viplab
     environment:
       ARTEMIS_USERNAME: user
       ARTEMIS_PASSWORD: password
   standalone-frontend:
     restart: unless-stopped
     image: viplab/standalone-frontend:latest
+    networks:
+      - viplab
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
@@ -54,6 +58,8 @@ services:
   standalone-frontend-mount:
     restart: unless-stopped
     image: viplab/standalone-frontend:latest
+    networks:
+      - viplab
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ${FRONTEND_DIR}/src:/app
@@ -69,6 +75,8 @@ services:
   vue-frontend-mount:
     restart: unless-stopped
     image: viplab/npm:18.13.0-alpine
+    networks:
+      - viplab
     command: ["run", "serve", "--", "--host", "0.0.0.0"]
     volumes:
       - ./jwks.private.json:/app/src/assets/jwks.private.json:ro
@@ -84,6 +92,8 @@ services:
   standalone-frontend-sign:
     restart: unless-stopped
     image: viplab/standalone-frontend:latest
+    networks:
+      - viplab
     volumes:
       - ./jwks.private.json:/jwks.private.json:ro
       - ./examples:/input:ro
@@ -98,6 +108,8 @@ services:
   darus-connector:
     restart: unless-stopped
     image: viplab/dv-viplab-connector:latest
+    networks:
+      - viplab
     depends_on:
       - redis
     volumes:
@@ -118,11 +130,15 @@ services:
       - "traefik.http.routers.darus-connector.rule=Host(`${HOST_URL}`)"
   redis:
     image: redis:alpine
+    networks:
+      - viplab
     restart: unless-stopped
     profiles: ["darus"]
   backend:
     restart: unless-stopped
     image: viplab/backend:latest
+    networks:
+      - viplab
     environment:
       - AMQPServer=activemq
       - endpoint_url
@@ -137,6 +153,8 @@ services:
   s3:
     restart: unless-stopped
     image: scireum/s3-ninja:latest
+    networks:
+      - viplab
     profiles: ["s3"]
     labels:
       - "traefik.enable=true"
@@ -147,7 +165,13 @@ services:
   dummy-backend:
     restart: unless-stopped
     image: viplab/dummy-backend:latest
+    networks:
+      - viplab
     environment:
       - amqp-host=activemq
       - viplab.responses=
     profiles: ["dummy"]
+
+networks:
+  viplab:
+    enable_ipv6: ${ENABLE_IPV6:-false}
