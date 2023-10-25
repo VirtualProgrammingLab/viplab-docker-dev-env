@@ -21,7 +21,7 @@ services:
       - viplab
     environment:
       - JWKS_FILE=/config/jwks.json
-      - amqp-host=activemq
+      - AMQP_HOST=activemq
     volumes:
       - ./jwks.json:/config/jwks.json:ro
     depends_on:
