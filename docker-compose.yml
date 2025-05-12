@@ -1,9 +1,7 @@
-version: "3.9"
-
 services:
   traefik:
     restart: unless-stopped
-    image: traefik:2.5.7
+    image: traefik:2.11
     networks:
       - viplab
     ports: # if your system has already apache running on 80/443 choose different ports and adjust traefik.toml
