@@ -13,18 +13,18 @@ docker run --rm ghcr.io/legion2/json-web-key-generator jwk-generator -t RSA -s 2
 ```
 Copy the two json objects into a private and public key file named `jwks.json` and `jwks.private.json` and add them to the cloned repository.
 
-After creating the keys, run `docker-compose build`.
+After creating the keys, run `docker compose build`.
 Every config change require a rebuild of the docker images.
 
 ## Start all applications
 To Start the applications:
 ```
-docker-compose up -d
+docker compose up -d
 ```
 
 To view all logs:
 ```
-docker-compose logs -f
+docker compose logs -f
 ```
 
 ## Profiles
@@ -38,10 +38,10 @@ docker-compose logs -f
 
 ### Example
 
-To enable a profile, use `--profile` in the `docker-compose up`-command, like this:
+To enable a profile, use `--profile` in the `docker compose up`-command, like this:
 
 ```
-docker-compose --profile standalone --profile s3 up
+docker compose --profile standalone --profile s3 up
 ```
 
 ## Services
