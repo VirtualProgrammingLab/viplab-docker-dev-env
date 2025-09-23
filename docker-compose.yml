@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.websocket-api.rule=Host(`${HOST_URL}`) && Path(`/computations`)"
   activemq:
     restart: unless-stopped
-    image: viplab/artemis:2.41.0-r0
+    image: viplab/artemis:2.42.0-r0
     networks:
       - viplab
     environment:
