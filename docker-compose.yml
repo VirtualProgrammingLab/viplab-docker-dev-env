@@ -19,19 +19,19 @@ services:
       - viplab
     environment:
       - JWKS_FILE=/config/jwks.json
-      - AMQP_HOST=activemq
+      - AMQP_HOST=artemis
     volumes:
       - ./jwks.json:/config/jwks.json:ro
     depends_on:
-      - activemq
+      - artemis
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.websocket-api.entrypoints=websecure"
       - "traefik.http.routers.websocket-api.tls=true"
       - "traefik.http.routers.websocket-api.rule=Host(`${HOST_URL}`) && Path(`/computations`)"
-  activemq:
+  artemis:
     restart: unless-stopped
-    image: viplab/artemis:2.44.0-r0
+    image: viplab/artemis:2.54.0-r0
     networks:
       - viplab
     environment:
@@ -72,7 +72,7 @@ services:
       - "traefik.http.routers.standalone-frontend.rule=Host(`${HOST_URL}`)"
   vue-frontend-mount:
     restart: unless-stopped
-    image: viplab/npm:18.13.0-alpine
+    image: viplab/npm:latest
     networks:
       - viplab
     command: ["run", "serve", "--", "--host", "0.0.0.0"]
@@ -138,14 +138,14 @@ services:
     networks:
       - viplab
     environment:
-      - AMQPServer=activemq
+      - AMQPServer=artemis
       - endpoint_url
       - access_key
       - secret_key
       - rewrite_endpoint_url
       - bucket_name
     depends_on:
-      - activemq
+      - artemis
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
   s3:
@@ -166,7 +166,7 @@ services:
     networks:
       - viplab
     environment:
-      - amqp-host=activemq
+      - amqp-host=artemis
       - viplab.responses=
     profiles: ["dummy"]
 

@@ -56,7 +56,7 @@ docker compose --profile standalone --profile s3 up
 
 * url: http://localhost:8083
 
-### activemq
+### artemis
 
 * url: http://localhost:8084/console/login
 * Username: user
