@@ -1,7 +1,12 @@
 debug = true
 
-logLevel = "WARNING"
 defaultEntryPoints = ["websecure", "web"]
+[global]
+checkNewVersion =  false
+sendAnonymousUsage = false
+
+[log]
+  level = "INFO"
 
 [entryPoints]
   [entryPoints.web]
@@ -13,6 +18,15 @@ defaultEntryPoints = ["websecure", "web"]
           scheme = "https"    
   [entryPoints.websecure]
   address = ":443"
+    [entryPoints.websecure.http]
+    aliasHeadersStrategy = "reject"
+      [entryPoints.websecure.http.encodedCharacters]
+        allowEncodedSlash = false
+        allowEncodedNullCharacter = false
+        allowEncodedSemicolon = false
+        allowEncodedPercent = false
+        allowEncodedQuestionMark = false
+        allowEncodedHash = false
   [entryPoints.traefik]
   address = ":8080"
 
@@ -29,3 +43,4 @@ defaultEntryPoints = ["websecure", "web"]
 [api]
   dashboard = true
   insecure = true
+  disabledashboardad = true
